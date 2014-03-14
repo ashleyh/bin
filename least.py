@@ -6,6 +6,7 @@ import sys
 import ctypes
 import itertools
 import subprocess
+import signal
 
 
 class WinSize(ctypes.Structure):
@@ -30,6 +31,7 @@ def main():
     if next_line is None:
         sys.stdout.writelines(first_lines)
     else:
+        signal.signal(signal.SIGPIPE, signal.SIG_DFL)
         p = subprocess.Popen(["less"] + sys.argv[1:], stdin=subprocess.PIPE)
         p.stdin.writelines(first_lines)
         p.stdin.write(next_line)
